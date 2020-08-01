@@ -1,0 +1,116 @@
+swagger: "2.0" #from swagger's official docs
+info:
+  version: "0.0.1"
+  title: ProjectFilms app
+host: localhost:10010
+basePath: /
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /films:
+    x-swagger-router-controller: film_functions
+    get:
+      operationId: get
+      description: Return all film list
+      responses:
+        "200":
+          description: Success 
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Film'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      operationId: creating
+      description: Add new film
+      parameters:
+      - name: film
+        description: Film properties
+        in: body
+        required: true
+        schema:
+          $ref: "#/definitions/Film"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /films/{id}:
+    x-swagger-router-controller: film_function
+    get:
+      operationId: finding
+      description: Find film with needed id
+      parameters:
+      - name: id
+        type: string
+        in: path
+        required: true
+      responses:
+        "200":
+          description: Success 
+          schema:
+            $ref: '#/definitions/Film'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    delete:
+      operationId: removing
+      description: Delite a film with needed id
+      parameters:
+      - name: id
+        description: Film id
+        type: string
+        in: path
+        required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+definitions:
+  Film:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      producer:
+        type: string
+      year:
+        type: integer
+    required:
+      - name
+      - producer
+      - year  
+  GeneralResponse:
+    properties:
+      message:
+        type: string
+    required:
+      - message
+  ErrorResponse:
+    properties:
+      message:
+        type: string
+    required:
+      - message
